@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Flags.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="WindowTimer.cs" />
+    <Compile Include="WindowFixer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="OverlayForm.resx">

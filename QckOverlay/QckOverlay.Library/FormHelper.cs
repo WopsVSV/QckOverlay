@@ -18,19 +18,35 @@ namespace QckOverlay.Library
         private static extern int SetWindowLongPtr(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+        static extern bool GetWindowRect(IntPtr hwnd, out InternalRect lpInternalRect);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, Flags.SetWindowPosFlags uFlags);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        public struct InternalRect
         {
             public int Left;        // x position of upper-left corner
             public int Top;         // y position of upper-left corner
             public int Right;       // x position of lower-right corner
             public int Bottom;      // y position of lower-right corner
         }
+
+        public struct Rect
+        {
+            public int X;
+            public int Y;
+            public int Width;
+            public int Height;
+            public Rect(int x, int y, int w, int h)
+            {
+                X = x;
+                Y = y;
+                Width = w;
+                Height = h;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -59,5 +75,22 @@ namespace QckOverlay.Library
             int initialStyle = GetWindowLongPtr(form.Handle, -20);
             SetWindowLongPtr(form.Handle, -20, initialStyle | 0x80000 | 0x20);
         }
+
+        /// <summary>
+        /// Gets the _internalRect of a window
+        /// </summary>
+        public static Rect GetWindowRect(this IntPtr windowPtr)
+        {
+            GetWindowRect(windowPtr, out _internalRect);
+
+            _rect.X = _internalRect.Left;
+            _rect.Y = _internalRect.Top;
+            _rect.Width = _internalRect.Right - _internalRect.Left + 1;
+            _rect.Height = _internalRect.Bottom - _internalRect.Top + 1;
+
+            return _rect;
+        }
+        private static InternalRect _internalRect;
+        private static Rect _rect = new Rect(0,0,1,1); // Basic rect
     }
 }

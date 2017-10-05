@@ -14,13 +14,9 @@ namespace QckOverlay.Library
     /// </summary>
     public class Overlay
     {
+        public static OverlayForm temp;
         private Process process;
         private Renderer renderer;
-
-        /// <summary>
-        /// The graphics object used for drawing on the overlay
-        /// </summary>
-        public Graphics Graphics { get; set; }
 
         /// <summary>
         /// Whether or not the overlay is attached to a process
@@ -39,6 +35,24 @@ namespace QckOverlay.Library
         {
             get { return renderer != null ? renderer.Opacity : 0; }
             set { if(renderer != null) renderer.Opacity = value; }
+        }
+
+        /// <summary>
+        /// Changes the FPS of the overlay draw action
+        /// </summary>
+        public int FPS
+        {
+            get => renderer.FPS;
+            set => renderer.FPS = value;
+        }
+
+        /// <summary>
+        /// How many times per second the movement
+        /// </summary>
+        public int ChangeChecksPerSecond
+        {
+            get => renderer.ChecksPerSecond;
+            set => renderer.ChecksPerSecond = value;
         }
 
         /// <summary>
@@ -74,6 +88,7 @@ namespace QckOverlay.Library
             try
             {
                 renderer = new Renderer(process.MainWindowHandle);
+                //Graphics = renderer.Graphics;
             }
             catch
             {
@@ -129,7 +144,7 @@ namespace QckOverlay.Library
 
 /* // FormHelper.RelocateForm(overlayForm.Handle, rect.Left, rect.Top);
  * //overlayForm.Size = new Size(rect.Right - rect.Left + 1, rect.Bottom - rect.Top + 1);
- *   //RECT rect;
+ *   //InternalRect rect;
             //GetWindowRect(process.MainWindowHandle, out rect);
               //Application.Run(overlayForm);
  * */
