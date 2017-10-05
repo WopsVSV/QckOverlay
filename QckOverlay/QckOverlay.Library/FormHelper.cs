@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,10 +12,10 @@ namespace QckOverlay.Library
     public static class FormHelper
     {
         #region P/Invoke
-        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong", SetLastError = true)]
         private static extern int GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong", SetLastError = true)]
         private static extern int SetWindowLongPtr(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -72,8 +73,18 @@ namespace QckOverlay.Library
         {
             form.BackColor = Color.Wheat;
             form.TransparencyKey = Color.Wheat;
-            int initialStyle = GetWindowLongPtr(form.Handle, -20);
-            SetWindowLongPtr(form.Handle, -20, initialStyle | 0x80000 | 0x20);
+            try
+            {
+                int initialStyle = GetWindowLongPtr(form.Handle, -20);
+                SetWindowLongPtr(form.Handle, -20, initialStyle | 0x80000 | 0x20);
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                Console.WriteLine(e.ToString());
+            }
+           
         }
 
         /// <summary>

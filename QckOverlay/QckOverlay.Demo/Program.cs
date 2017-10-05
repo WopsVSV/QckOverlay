@@ -11,15 +11,30 @@ namespace QckOverlay.Demo
 {
     class Program
     {
+        private static readonly Font myFont = new Font("Calibri", 12);
+
         static void Main(string[] args)
         {
-            Overlay overlay = new Overlay("Steam");
-            overlay.Opacity = 0.8;
-            overlay.FPS = 30;
-            overlay.ChangeChecksPerSecond = 100;
-            overlay.BeginRendering();
+            // Creates the overlay object ('Steam' is the process name)
+            var overlay = new Overlay("Steam")
+            {
+                Opacity = 0.8,
+                FPS = 30,
+                ChangeChecksPerSecond = 200
+            };
+
+            overlay.Paint += Overlay_Paint; // Assigned a paint event
+
+            overlay.BeginRendering(); // Starts the rendering
 
             Console.ReadKey(true);
+        }
+
+        // Whatever you want to draw in this paint event ^^
+        private static void Overlay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        {
+            e.Graphics.FillRectangle(Brushes.Black, 2, 2, 190, 32);
+            e.Graphics.DrawString("QckOverlay Demonstration ", myFont, Brushes.BlueViolet, 8, 8);
         }
     }
 }

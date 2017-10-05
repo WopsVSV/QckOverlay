@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace QckOverlay.Library
 {
@@ -40,7 +42,7 @@ namespace QckOverlay.Library
         public int ChecksPerSecond {
             get => checksPerSecond;
             set {
-                if (value > 100) checksPerSecond = 100;
+                if (value > 200) checksPerSecond = 200;
                 if (value < 1) checksPerSecond = 1;
                 checksPerSecond = value;
                 if (windowTimer != null) windowTimer.Interval = 1000 / checksPerSecond;
@@ -63,14 +65,22 @@ namespace QckOverlay.Library
         }
 
         /// <summary>
+        /// Reference to the overlay
+        /// </summary>
+        private Overlay overlay;
+
+        /// <summary>
         /// Constructor for the renderer. Creates the new form and keeps it hidden.
         /// </summary>
-        public Renderer(IntPtr windowHandle)
+        public Renderer(IntPtr windowHandle, Overlay overlay)
         {
             // Creates the overlay form
             overlayForm = new OverlayForm();
             overlayForm.ChangeSize(1, 1);
             overlayForm.SetTransparent();
+
+            // Assigns the paint event
+            this.overlay = overlay;
 
             // Creates the window fixer and attaches it to the process' window and to the overlay
             windowFixer = new WindowFixer(overlayForm, windowHandle);
@@ -82,6 +92,7 @@ namespace QckOverlay.Library
             windowDrawer = new Timer();
             windowDrawer.Interval = 1000 / FPS;
             windowDrawer.Tick += delegate { overlayForm.Invalidate(); };
+
         }
 
         /// <summary>
@@ -92,12 +103,20 @@ namespace QckOverlay.Library
             overlayForm.OverlayPaint += OverlayForm_OverlayPaint;
             windowTimer.Start();
             windowDrawer.Start();
-            Application.Run(overlayForm);
+
+            try
+            {
+                Application.Run(overlayForm);
+            }
+            catch
+            {
+                overlayForm.ShowDialog();
+            }
         }
 
         private void OverlayForm_OverlayPaint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(Brushes.Aqua, 50,50,100,100);
+            overlay.OnPaint(sender,e);
         }
 
         /// <summary>

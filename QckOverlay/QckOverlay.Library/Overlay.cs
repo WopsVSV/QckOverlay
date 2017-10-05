@@ -14,7 +14,6 @@ namespace QckOverlay.Library
     /// </summary>
     public class Overlay
     {
-        public static OverlayForm temp;
         private Process process;
         private Renderer renderer;
 
@@ -56,13 +55,22 @@ namespace QckOverlay.Library
         }
 
         /// <summary>
+        /// Main paint event for the overlay
+        /// </summary>
+        public event PaintEventHandler Paint;
+
+        /// <summary>
         /// Enables the visual styles and creates the basic overlay form
         /// </summary>
         public Overlay()
         {
             // Enable features for the form to run properly
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+            }
+            catch { /* Occurs when ran in another windows app */ }
         }
         public Overlay(string processName) : this() => Attach(processName);
         public Overlay(int processId) : this() => Attach(processId);
@@ -87,8 +95,7 @@ namespace QckOverlay.Library
 
             try
             {
-                renderer = new Renderer(process.MainWindowHandle);
-                //Graphics = renderer.Graphics;
+                renderer = new Renderer(process.MainWindowHandle, this);
             }
             catch
             {
@@ -138,6 +145,14 @@ namespace QckOverlay.Library
         {
             if (renderer != null && renderer.IsRendering)
                 renderer.Stop();
+        }
+
+        /// <summary>
+        /// Calls the paint event, but can only be accessed internally
+        /// </summary>
+        internal void OnPaint(object sender, PaintEventArgs e)
+        {
+            Paint?.Invoke(sender, e);
         }
     }
 }
