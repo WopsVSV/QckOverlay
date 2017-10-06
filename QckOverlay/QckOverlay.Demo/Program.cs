@@ -15,7 +15,7 @@ namespace QckOverlay.Demo
 
         static void Main(string[] args)
         {
-            // Creates the overlay object ('Steam' is the process name)
+             // Creates the overlay object ('Steam' is the process name)
             var overlay = new Overlay("Steam")
             {
                 Opacity = 0.8,
@@ -26,7 +26,7 @@ namespace QckOverlay.Demo
             overlay.Paint += Overlay_Paint; // Assigned a paint event
 
             overlay.BeginRendering(); // Starts the rendering
-
+ 
             Console.ReadKey(true);
         }
 

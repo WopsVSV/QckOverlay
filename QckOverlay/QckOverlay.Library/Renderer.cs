@@ -21,6 +21,11 @@ namespace QckOverlay.Library
         private readonly Timer windowDrawer;
 
         /// <summary>
+        /// Standalone == overlay is the first windows form opened in the app 
+        /// </summary>
+        private bool IsStandalone;
+
+        /// <summary>
         /// How many frames per second the overlay is going to be rendered with
         /// </summary>
         public int FPS
@@ -100,23 +105,23 @@ namespace QckOverlay.Library
         /// </summary>
         public void Start()
         {
+            // Hooks the paint event of the overlay form
             overlayForm.OverlayPaint += OverlayForm_OverlayPaint;
+
+            // Starts the update timers
             windowTimer.Start();
             windowDrawer.Start();
 
             try
             {
                 Application.Run(overlayForm);
+                IsStandalone = true;
             }
             catch
             {
-                overlayForm.ShowDialog();
+                overlayForm.Show();
+                IsStandalone = false;
             }
-        }
-
-        private void OverlayForm_OverlayPaint(object sender, PaintEventArgs e)
-        {
-            overlay.OnPaint(sender,e);
         }
 
         /// <summary>
@@ -124,9 +129,23 @@ namespace QckOverlay.Library
         /// </summary>
         public void Stop()
         {
+            // Stops the update timers
             windowTimer.Stop();
             windowDrawer.Stop();
-            Application.Exit();
+
+            if (IsStandalone)
+                Application.Exit();
+            else
+                overlayForm.Close();
         }
+
+        /// <summary>
+        /// Event directly hooked to the (upper) overlay paint event, which is user-defined.
+        /// </summary>
+        private void OverlayForm_OverlayPaint(object sender, PaintEventArgs e)
+        {
+            overlay.OnPaint(sender, e);
+        }
+
     }
 }
