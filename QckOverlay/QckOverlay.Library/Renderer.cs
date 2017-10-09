@@ -19,6 +19,8 @@ namespace QckOverlay.Library
         private readonly WindowFixer windowFixer;
         private readonly Timer windowTimer;
         private readonly Timer windowDrawer;
+        private readonly Timer windowForegroundTimer;
+        private readonly IntPtr windowHandle;
 
         /// <summary>
         /// Standalone == overlay is the first windows form opened in the app 
@@ -70,15 +72,23 @@ namespace QckOverlay.Library
         }
 
         /// <summary>
+        /// Specifies if the renderer should draw regardless of foreground status
+        /// </summary>
+        public bool AlwaysDraw { get; set; }
+
+        /// <summary>
         /// Reference to the overlay
         /// </summary>
-        private Overlay overlay;
+        private readonly Overlay overlay;
 
         /// <summary>
         /// Constructor for the renderer. Creates the new form and keeps it hidden.
         /// </summary>
         public Renderer(IntPtr windowHandle, Overlay overlay)
         {
+            // Keep window handle
+            this.windowHandle = windowHandle;
+
             // Creates the overlay form
             overlayForm = new OverlayForm();
             overlayForm.ChangeSize(1, 1);
@@ -98,6 +108,26 @@ namespace QckOverlay.Library
             windowDrawer.Interval = 1000 / FPS;
             windowDrawer.Tick += delegate { overlayForm.Invalidate(); };
 
+            // Creates the window foreground timer
+            windowForegroundTimer = new Timer();
+            windowForegroundTimer.Interval = 250;
+            windowForegroundTimer.Tick += WindowForegroundTimerOnTick;
+        }
+
+        private void WindowForegroundTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            if (!AlwaysDraw)
+            {
+                if ((FormHelper.GetForegroundWindow() != windowHandle || windowHandle.GetWindowRect().X < -1000) && overlayForm.ShouldDraw)
+                {
+                    overlayForm.ShouldDraw = false;
+                }
+                else if ((FormHelper.GetForegroundWindow() == windowHandle) && !overlayForm.ShouldDraw)
+                    overlayForm.ShouldDraw = true;
+            } else
+            {
+                if (!overlayForm.ShouldDraw) overlayForm.ShouldDraw = true;
+            }
         }
 
         /// <summary>
@@ -122,6 +152,9 @@ namespace QckOverlay.Library
                 overlayForm.Show();
                 IsStandalone = false;
             }
+
+            // Mentions that is has started
+            IsRendering = true;
         }
 
         /// <summary>
@@ -137,6 +170,9 @@ namespace QckOverlay.Library
                 Application.Exit();
             else
                 overlayForm.Close();
+            
+            // Mentions that is has stopped
+            IsRendering = false;
         }
 
         /// <summary>

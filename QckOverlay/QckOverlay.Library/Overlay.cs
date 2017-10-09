@@ -55,6 +55,15 @@ namespace QckOverlay.Library
         }
 
         /// <summary>
+        /// Specifies if the renderer should draw regardless of foreground status
+        /// </summary>
+        public bool AlwaysDraw
+        {
+            get => renderer.AlwaysDraw;
+            set => renderer.AlwaysDraw = value;
+        }
+
+        /// <summary>
         /// Main paint event for the overlay
         /// </summary>
         public event PaintEventHandler Paint;

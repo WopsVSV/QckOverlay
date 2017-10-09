@@ -18,10 +18,11 @@ namespace QckOverlay.Library
         }
 
         public event PaintEventHandler OverlayPaint;
+        public bool ShouldDraw = true;
 
         private void OverlayForm_Paint(object sender, PaintEventArgs e)
         {
-            if (OverlayPaint != null) OverlayPaint(sender, e);
+            if (OverlayPaint != null && ShouldDraw) OverlayPaint(sender, e);
         }
 
     }

@@ -15,26 +15,30 @@ namespace QckOverlay.Demo
 
         static void Main(string[] args)
         {
-             // Creates the overlay object ('Steam' is the process name)
-            var overlay = new Overlay("Steam")
+            try
             {
-                Opacity = 0.8,
-                FPS = 30,
-                ChangeChecksPerSecond = 200
-            };
+                // Creates the overlay object ('Steam' is the process name)
+                var overlay = new Overlay("rs2client")
+                {
+                    Opacity = 0.9,
+                    FPS = 30,
+                    ChangeChecksPerSecond = 200,
+                    AlwaysDraw = false
+                };
 
-            overlay.Paint += Overlay_Paint; // Assigned a paint event
+                overlay.Paint += Overlay_Paint; // Assigned a paint event
 
-            overlay.BeginRendering(); // Starts the rendering
- 
+                overlay.BeginRendering(); // Starts the rendering
+
+            }catch(Exception ex) { Console.WriteLine(ex.ToString()); }
             Console.ReadKey(true);
         }
 
         // Whatever you want to draw in this paint event ^^
         private static void Overlay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(Brushes.Black, 2, 2, 190, 32);
-            e.Graphics.DrawString("QckOverlay Demonstration ", myFont, Brushes.BlueViolet, 8, 8);
+            e.Graphics.FillRectangle(Brushes.Black, 8, 32, 188, 30);
+            e.Graphics.DrawString("QckOverlay Demonstration ", myFont, Brushes.BlueViolet, 12, 36);
         }
     }
 }

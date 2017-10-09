@@ -24,6 +24,9 @@ namespace QckOverlay.Library
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, Flags.SetWindowPosFlags uFlags);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
         [StructLayout(LayoutKind.Sequential)]
         public struct InternalRect
         {
@@ -103,5 +106,6 @@ namespace QckOverlay.Library
         }
         private static InternalRect _internalRect;
         private static Rect _rect = new Rect(0,0,1,1); // Basic rect
+
     }
 }
