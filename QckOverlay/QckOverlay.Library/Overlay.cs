@@ -48,7 +48,7 @@ namespace QckOverlay.Library
         /// <summary>
         /// How many times per second the movement
         /// </summary>
-        public int ChangeChecksPerSecond
+        public int CPS
         {
             get => renderer.ChecksPerSecond;
             set => renderer.ChecksPerSecond = value;

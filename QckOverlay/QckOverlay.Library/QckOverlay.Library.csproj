@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ForegroundAgent.cs" />
     <Compile Include="FormHelper.cs" />
     <Compile Include="OverlayForm.cs">
       <SubType>Form</SubType>

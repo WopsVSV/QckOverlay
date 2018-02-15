@@ -32,7 +32,7 @@ namespace QckOverlay.Library
             var windowRect = windowHandle.GetWindowRect();
             var overlayRect = overlay.Handle.GetWindowRect();
 
-            Console.WriteLine($"W-> X: {windowRect.X}   Y: {windowRect.Y}   W: {windowRect.Width}   H: {windowRect.Height}");
+            //Console.WriteLine($"W-> X: {windowRect.X}   Y: {windowRect.Y}   W: {windowRect.Width}   H: {windowRect.Height}");
 
             // Check for same size
             if (overlay.Width != windowRect.Width || overlay.Height != windowRect.Height)

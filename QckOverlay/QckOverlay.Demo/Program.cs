@@ -11,18 +11,18 @@ namespace QckOverlay.Demo
 {
     class Program
     {
-        private static readonly Font myFont = new Font("Calibri", 12);
+        private static readonly Font CalibriFont = new Font("Calibri", 12, FontStyle.Bold);
 
         static void Main(string[] args)
         {
             try
             {
-                // Creates the overlay object ('Steam' is the process name)
-                var overlay = new Overlay("rs2client")
+                // Creates the overlay object
+                var overlay = new Overlay("processname")
                 {
-                    Opacity = 0.9,
+                    Opacity = 0.8,
                     FPS = 30,
-                    ChangeChecksPerSecond = 200,
+                    CPS = 400,
                     AlwaysDraw = false
                 };
 
@@ -30,15 +30,15 @@ namespace QckOverlay.Demo
 
                 overlay.BeginRendering(); // Starts the rendering
 
-            }catch(Exception ex) { Console.WriteLine(ex.ToString()); }
+            } catch(Exception ex) { Console.WriteLine(ex.ToString()); }
             Console.ReadKey(true);
         }
 
-        // Whatever you want to draw in this paint event ^^
+        // Drawing paint event
         private static void Overlay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(Brushes.Black, 8, 32, 188, 30);
-            e.Graphics.DrawString("QckOverlay Demonstration ", myFont, Brushes.BlueViolet, 12, 36);
+            e.Graphics.FillRectangle(Brushes.Black, 8, 32, 148, 30);
+            e.Graphics.DrawString("Hello world.", CalibriFont, Brushes.BlueViolet, 12, 36);
         }
     }
 }
